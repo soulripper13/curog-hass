@@ -3,8 +3,10 @@
   "name": "curog_hass",
   "version": "1.0",
   "documentation": "https://github.com/soulripper13/curog-hass/blob/main/README.md",
+  "issue_tracker": "https://github.com/soulripper13/curog-hass/issues",
   "requirements": ["requests"],
   "dependencies": [],
   "codeowners": ["@soulripper13"],
+  "iot_class": "cloud_polling"
   "config_flow": true
 }
