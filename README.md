@@ -17,6 +17,7 @@ This custom integration for Home Assistant allows you to monitor energy consumpt
 
 - Home Assistant (version 2023.12 or later)
 - Python 3.8 or later
+- requests
 - `aiohttp` library (included in the integration)
 
 ## HACS installation
