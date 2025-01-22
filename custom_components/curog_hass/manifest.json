@@ -1,0 +1,10 @@
+{
+  "domain": "energy_consumption",
+  "name": "Energy Consumption",
+  "version": "1.0",
+  "documentation": "https://github.com/soulripper13/curog-hass/blob/main/README.md",
+  "requirements": ["requests"],
+  "dependencies": [],
+  "codeowners": ["@soulripper13"],
+  "config_flow": true
+}
