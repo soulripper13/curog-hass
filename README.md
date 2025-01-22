@@ -1,8 +1,8 @@
 # curog-hass
-Home assistant integration for energy monitoring from lk.curog.ru using its API
+Home assistant integration for energy monitoring from [lk.curog.ru](https://lk.curog.ru/) using its API
 # Energy Consumption Integration for Home Assistant
 
-This custom integration for Home Assistant allows you to monitor energy consumption from a specific modem using an API. It provides two sensor entities: hourly, daily, and monthly energy consumption. The monthly sensor resets automatically at the beginning of each month.
+This custom integration for Home Assistant allows you to monitor energy consumption from a specific modem using an API. It provides two sensor entities: daily, and monthly energy consumption. The monthly sensor resets automatically at the beginning of each month.
 
 ## Features
 
@@ -40,7 +40,7 @@ This custom integration for Home Assistant allows you to monitor energy consumpt
   - **Modem ID**: Your modem's unique identifier.
   - **API Key**: Your API key for accessing the data.
   - **Registrator ID**: The ID of the registrator you want to monitor.
-  - You can find the necessary parameters on lk.curog.ru
+  - You can find the necessary parameters on [lk.curog.ru](https://lk.curog.ru/)
     
 
 
