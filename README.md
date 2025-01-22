@@ -1,4 +1,4 @@
-# curing-hass
+# curog-hass
 Home assistant integration for energy monitoring from lk.curog.ru using its API
 # Energy Consumption Integration for Home Assistant
 
