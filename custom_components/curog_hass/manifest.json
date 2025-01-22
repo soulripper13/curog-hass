@@ -1,6 +1,6 @@
 {
-  "domain": "energy_consumption",
-  "name": "Energy Consumption",
+  "domain": "curog_hass",
+  "name": "curog_hass",
   "version": "1.0",
   "documentation": "https://github.com/soulripper13/curog-hass/blob/main/README.md",
   "requirements": ["requests"],
