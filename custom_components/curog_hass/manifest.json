@@ -8,5 +8,4 @@
   "dependencies": [],
   "codeowners": ["@soulripper13"],
   "iot_class": "cloud_polling"
-  "config_flow": true
 }
