@@ -7,7 +7,7 @@ This custom integration for Home Assistant allows you to monitor energy consumpt
 ## Features
 
 - Fetches energy consumption data from an external API.
-- Provides three types of sensors:
+- Provides two types of sensors:
   - **Daily Energy Consumption**
   - **Monthly Energy Consumption** (resets automatically at the start of each month)
 - Allows configuration through the Home Assistant UI.
@@ -19,7 +19,14 @@ This custom integration for Home Assistant allows you to monitor energy consumpt
 - Python 3.8 or later
 - `aiohttp` library (included in the integration)
 
-## Installation
+## HACS installation
+
+1. Add this repository to HACS.
+2. Install the integration.
+3. Restart Home Assistant.
+4. Configure the integration via the Home Assistant UI.
+
+## Manual Installation
 
 1. **Download the Integration**
    - Clone this repository or download it as a ZIP file.
@@ -45,7 +52,7 @@ This custom integration for Home Assistant allows you to monitor energy consumpt
 
 
 2. **Entities Created**
-- After successful configuration, three sensor entities will be created:
+- After successful configuration, two sensor entities will be created:
   - `sensor.daily_energy_consumption`
   - `sensor.monthly_energy_consumption`
 
