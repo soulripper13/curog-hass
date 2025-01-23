@@ -1,7 +1,7 @@
 {
   "domain": "curog_hass",
   "name": "curog_hass",
-  "version": "1.0",
+  "version": "1.01",
   "documentation": "https://github.com/soulripper13/curog-hass/blob/main/README.md",
   "issue_tracker": "https://github.com/soulripper13/curog-hass/issues",
   "requirements": ["requests"],
