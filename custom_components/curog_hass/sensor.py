@@ -42,7 +42,7 @@ class EnergyConsumptionSensor(SensorEntity):
     @property
     def state_class(self):
         """Return the state class of the entity."""
-        return "measurement"
+        return "total_increasing"
 
     async def async_update(self):
         """Fetch new state data for the sensor."""
