@@ -2,7 +2,7 @@ from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 import voluptuous as vol
 
-class EnergyConsumptionConfigFlow(config_entries.ConfigFlow, domain="energy_consumption"):
+class EnergyConsumptionConfigFlow(config_entries.ConfigFlow, domain="curog_hass"):
     async def async_step_user(self, user_input=None):
         if user_input is not None:
             return self.async_create_entry(title="Energy Consumption", data=user_input)
