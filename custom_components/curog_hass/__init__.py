@@ -1,7 +1,7 @@
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 
-DOMAIN = "energy_consumption"
+DOMAIN = "curog_hass"
 
 async def async_setup(hass: HomeAssistant, config: dict):
     """Set up the Energy Consumption component."""
