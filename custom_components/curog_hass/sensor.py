@@ -5,7 +5,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant import config_entries
 
-DOMAIN = "energy_consumption"
+DOMAIN = "curog_hass"
 
 class EnergyConsumptionSensor(SensorEntity):
     """Representation of an energy consumption sensor."""
