@@ -1,14 +1,11 @@
 import aiohttp
-import logging
 from datetime import datetime, timedelta
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant import config_entries
-import pytz
 
 DOMAIN = "curog_hass"
-logger = logging.getLogger(__name__)
 
 class EnergyConsumptionSensor(SensorEntity):
     """Representation of an energy consumption sensor."""
@@ -34,31 +31,70 @@ class EnergyConsumptionSensor(SensorEntity):
 
     @property
     def unique_id(self):
+        """Return a unique ID for this entity."""
         return f"{self._registrator_id}_{self._name.replace(' ', '_').lower()}"
 
     @property
     def device_class(self):
+        """Return the device class of the entity."""
         return "energy"
 
     @property
     def state_class(self):
+        """Return the state class of the entity."""
         return "total_increasing"
 
     async def async_update(self):
+        """Fetch new state data for the sensor."""
         self._consumption = await fetch_energy_data(
             self._modem_id,
             self._api_key,
             self._registrator_id,
-            self.name,
-            self.hass.config.time_zone
+            self.name
         )
 
-async def fetch_energy_data(modem_id, api_key, registrator_id, consumption_type, timezone):
-    # Your existing fetch logic here...
+async def fetch_energy_data(modem_id, api_key, registrator_id, consumption_type):
+    """Fetch energy data from the API based on the type of consumption."""
+    vladivostok_time = datetime.utcnow() + timedelta(hours=10)
+    start_of_year = datetime(vladivostok_time.year, 1, 1)
+    start_timestamp = int(start_of_year.timestamp())
+    end_timestamp = int(vladivostok_time.timestamp())
+
+    url = f"https://lk.curog.ru/api.data/get_values/?modem_id={modem_id}&key={api_key}&from={start_timestamp}&to={end_timestamp}"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status != 200:
+                return 0  # Handle API error appropriately
+            
+            data = await response.json()
+            values = data["registrators"][registrator_id]["values"]
+
+            current_date = vladivostok_time.strftime("%Y-%m-%d")
+            current_month = vladivostok_time.strftime("%Y-%m")
+
+            if consumption_type == "Daily Energy Consumption":
+                filtered_data = [
+                    item for item in values 
+                    if datetime.utcfromtimestamp(item["timestamp"] + 36000).strftime("%Y-%m-%d") == current_date
+                ]
+            elif consumption_type == "Monthly Energy Consumption":
+                filtered_data = [
+                    item for item in values 
+                    if datetime.utcfromtimestamp(item["timestamp"] + 36000).strftime("%Y-%m") == current_month
+                ]
+            else:
+                return 0
+            
+            if len(filtered_data) > 1:
+                return filtered_data[-1]["value"] - filtered_data[0]["value"]
+    
+    return 0
 
 async def async_setup_entry(hass: HomeAssistant, entry: config_entries.ConfigEntry, async_add_entities):
-    """Set up sensor entities from a config entry."""
+    """Set up sensor entities."""
     
+    # Create instances for daily and monthly sensors only
     sensors = [
         EnergyConsumptionSensor("Daily Energy Consumption", 0,
                                  entry.data["modem_id"],
@@ -70,8 +106,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: config_entries.ConfigEnt
                                  entry.data["registrator_id"])
     ]
     
+    # Register the sensors in Home Assistant
     async_add_entities(sensors)
     
-    logger.debug("Curog Hass sensors set up successfully.")
-    
     return True
+
