@@ -1,4 +1,5 @@
 import aiohttp
+import logging
 from datetime import datetime, timedelta
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.sensor import SensorEntity
@@ -7,6 +8,9 @@ from homeassistant import config_entries
 import pytz  # Make sure to install pytz if not already available
 
 DOMAIN = "curog_hass"
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 class EnergyConsumptionSensor(SensorEntity):
     """Representation of an energy consumption sensor."""
@@ -71,9 +75,17 @@ async def fetch_energy_data(modem_id, api_key, registrator_id, consumption_type,
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status != 200:
+                text = await response.text()  # Log the text response for debugging
+                logger.error(f"Error fetching data: {text}")  # Log the error message
                 return 0  # Handle API error appropriately
             
-            data = await response.json()
+            try:
+                data = await response.json()
+            except aiohttp.ContentTypeError:
+                text = await response.text()
+                logger.error(f"Failed to decode JSON, received: {text}")
+                return 0
+            
             values = data["registrators"][registrator_id]["values"]
 
             current_date = local_time.strftime("%Y-%m-%d")
@@ -116,3 +128,4 @@ async def async_setup_entry(hass: HomeAssistant, entry: config_entries.ConfigEnt
     async_add_entities(sensors)
     
     return True
+
