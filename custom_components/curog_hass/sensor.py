@@ -1,9 +1,10 @@
 import aiohttp
-from datetime import datetime, timedelta
+from datetime import datetime
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant import config_entries
+from homeassistant.util import dt as dt_util
 
 DOMAIN = "curog_hass"
 
@@ -55,10 +56,11 @@ class EnergyConsumptionSensor(SensorEntity):
 
 async def fetch_energy_data(modem_id, api_key, registrator_id, consumption_type):
     """Fetch energy data from the API based on the type of consumption."""
-    vladivostok_time = datetime.utcnow() + timedelta(hours=10)
-    start_of_year = datetime(vladivostok_time.year, 1, 1)
+    # Use Home Assistant's time utilities to get the current time in the system's time zone
+    now = dt_util.now()
+    start_of_year = datetime(now.year, 1, 1, tzinfo=now.tzinfo)
     start_timestamp = int(start_of_year.timestamp())
-    end_timestamp = int(vladivostok_time.timestamp())
+    end_timestamp = int(now.timestamp())
 
     url = f"https://lk.curog.ru/api.data/get_values/?modem_id={modem_id}&key={api_key}&from={start_timestamp}&to={end_timestamp}"
 
@@ -70,18 +72,18 @@ async def fetch_energy_data(modem_id, api_key, registrator_id, consumption_type)
             data = await response.json()
             values = data["registrators"][registrator_id]["values"]
 
-            current_date = vladivostok_time.strftime("%Y-%m-%d")
-            current_month = vladivostok_time.strftime("%Y-%m")
+            current_date = now.strftime("%Y-%m-%d")
+            current_month = now.strftime("%Y-%m")
 
             if consumption_type == "Daily Energy Consumption":
                 filtered_data = [
                     item for item in values 
-                    if datetime.utcfromtimestamp(item["timestamp"] + 36000).strftime("%Y-%m-%d") == current_date
+                    if datetime.utcfromtimestamp(item["timestamp"]).astimezone(now.tzinfo).strftime("%Y-%m-%d") == current_date
                 ]
             elif consumption_type == "Monthly Energy Consumption":
                 filtered_data = [
                     item for item in values 
-                    if datetime.utcfromtimestamp(item["timestamp"] + 36000).strftime("%Y-%m") == current_month
+                    if datetime.utcfromtimestamp(item["timestamp"]).astimezone(now.tzinfo).strftime("%Y-%m") == current_month
                 ]
             else:
                 return 0
@@ -110,4 +112,3 @@ async def async_setup_entry(hass: HomeAssistant, entry: config_entries.ConfigEnt
     async_add_entities(sensors)
     
     return True
-
